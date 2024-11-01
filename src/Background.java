@@ -11,58 +11,37 @@ import java.awt.Image;
 import javax.imageio.ImageIO;
 
 public class Background {
-	private Image image; //backgroud image
-    private int x; //x coordinate
-    private int y; //y coordinate
+    private Image image;
+    private int x;
+    private int y;
 
- 
-    //constructor
     public Background() {
-        this(0,0);
-    }//Background
- 
-    //initializes constructor
+        this(0, 0);
+    }
+
     public Background(int x, int y) {
         this.x = x;
         this.y = y;
- 
-        // try to open the background image file 
         try {
-        	image = ImageIO.read(getClass().getClassLoader().getResource("images/background.jpg"));
-        	draw(image.getGraphics());
+            image = ImageIO.read(getClass().getClassLoader().getResource("images/background.png"));
+            if (image == null) {
+                System.err.println("Background image could not be loaded!");
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading background image: " + e.getMessage());
         }
-        catch (Exception e) { System.out.println(e); }
- 
-    }//Background
- 
-   	//method that draws the image onto the Graphics object passed
+    }
+
     public void draw(Graphics window) {
-        //draw the image onto the Graphics reference
+        if (image == null) return;  // Skip drawing if no image is loaded
         window.drawImage(image, getX(), getY(), 1920, 1080, null);
- 
-        //move the x position left for next time
         this.x -= 1;
- 
-        //check to see if the image has gone off stage left
-        if (this.x <= -1 * 1920) {
- 
-            //if it has, line it back up so that its left edge is lined up to the right side of the other background image
-            this.x = this.x + 1920 * 2;
-        }//if
- 
-    }//draw
- 
-    public void setX(int x) {
-        this.x = x;
-    }//setX
-    public int getX() {
-        return this.x;
-    }//getX
-    public int getY() {
-        return this.y;
-    }//getY
-    public int getImageWidth() {
-        return 1920;
-    }//getImageWidth
-    
-}//class Background
+        if (this.x <= -1920) {
+            this.x += 1920 * 2;
+        }
+    }
+
+    public int getX() { return this.x; }
+    public int getY() { return this.y; }
+    public int getImageWidth() { return 1920; }
+}
